@@ -2,82 +2,63 @@
 import { currentAgeForBirthYear } from "../utils";
 
 describe("currentAgeForBirthYear", () => {
-  it("returns the age of a person based on the year of birth", () => {
+  it("should return the correct age for a given birth year", () => {
     // Arrange
     const currentYear = new Date().getFullYear();
-    const birthYear = 1984;
+    const birthYear = 1990;
     const expectedAge = currentYear - birthYear;
 
     // Act
-    const actualAge = currentAgeForBirthYear(birthYear);
+    const result = currentAgeForBirthYear(birthYear);
 
     // Assert
-    expect(actualAge).toBe(expectedAge);
+    expect(result).toBe(expectedAge);
   });
-});
-// src/utils.js
-export function currentAgeForBirthYear(birthYear) {
-  return new Date().getFullYear() - birthYear;
-}
-// src/__tests__/utils.test.js
-import { currentAgeForBirthYear } from "../utils";
 
-describe("currentAgeForBirthYear", () => {
-  it("returns the age of a person based on the year of birth", () => {
+  it("should return 0 when birth year is current year", () => {
     // Arrange
     const currentYear = new Date().getFullYear();
-    const birthYear = 1984;
-    const expectedAge = currentYear - birthYear;
 
     // Act
-    const actualAge = currentAgeForBirthYear(birthYear);
+    const result = currentAgeForBirthYear(currentYear);
 
     // Assert
-    expect(actualAge).toBe(expectedAge);
+    expect(result).toBe(0);
   });
 
-  it("returns 0 for someone born this year", () => {
-    // Arrange
-    const currentYear = new Date().getFullYear();
-    
-    // Act
-    const age = currentAgeForBirthYear(currentYear);
-    
-    // Assert
-    expect(age).toBe(0);
-  });
-
-  it("returns a negative number for future birth years", () => {
+  it("should return negative number for future birth years", () => {
     // Arrange
     const futureYear = new Date().getFullYear() + 5;
-    
+
     // Act
-    const age = currentAgeForBirthYear(futureYear);
-    
+    const result = currentAgeForBirthYear(futureYear);
+
     // Assert
-    expect(age).toBe(-5);
+    expect(result).toBe(-5);
   });
-});
-// src/utils.js
-export function currentAgeForBirthYear(birthYear) {
-  if (typeof birthYear !== "number" || isNaN(birthYear)) {
-    throw new Error("Birth year must be a number");
-  }
-  
-  return new Date().getFullYear() - birthYear;
-}
-// src/__tests__/utils.test.js
-describe("error handling", () => {
-  it("throws an error when birth year is not a number", () => {
+
+  it("should throw error when birth year is not a number", () => {
     // Arrange
-    const invalidBirthYear = "not a number";
-    
-    // Act & Assert
-    expect(() => currentAgeForBirthYear(invalidBirthYear)).toThrow(
-      "Birth year must be a number"
-    );
+    const invalidInputs = ["text", null, undefined, {}, []];
+
+    invalidInputs.forEach(input => {
+      // Act & Assert
+      expect(() => currentAgeForBirthYear(input)).toThrow(
+        "Birth year must be a number"
+      );
+    });
+  });
+
+  it("should handle minimum safe integer", () => {
+    // Arrange
+    const birthYear = Number.MIN_SAFE_INTEGER;
+    const currentYear = new Date().getFullYear();
+    const expectedAge = currentYear - birthYear;
+
+    // Act
+    const result = currentAgeForBirthYear(birthYear);
+
+    // Assert
+    expect(result).toBe(expectedAge);
   });
 });
-export function currentAgeForBirthYear(birthYear) {
-  return new Date().getFullYear() - birthYear;
-}
